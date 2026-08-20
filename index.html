@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta
+    name="description"
+    content="Bilder lokal zu einer ZIP-Datei verpacken und über iOS teilen"
+  >
+
+  <title>Bilder als ZIP versenden</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <p class="eyebrow">Lokale Verarbeitung</p>
+      <h1>Bilder als ZIP versenden</h1>
+
+      <p class="intro">
+        Die ausgewählten Bilder werden auf diesem Gerät zu einer ZIP-Datei
+        verpackt. Es erfolgt kein Upload auf diese Webseite.
+      </p>
+    </header>
+
+    <section class="card" aria-labelledby="auswahl-titel">
+      <h2 id="auswahl-titel">Bilder auswählen</h2>
+
+      <label class="file-picker" for="imageInput">
+        <span class="file-picker-icon" aria-hidden="true">＋</span>
+        <span class="file-picker-title">Bilder auswählen</span>
+        <span class="file-picker-hint">
+          Mehrere Bilder gleichzeitig möglich
+        </span>
+      </label>
+
+      <input
+        id="imageInput"
+        name="images"
+        type="file"
+        accept="image/*"
+        multiple
+      >
+
+      <div
+        id="fileSummary"
+        class="file-summary"
+        aria-live="polite"
+      >
+        Noch keine Bilder ausgewählt.
+      </div>
+
+      <ul
+        id="fileList"
+        class="file-list"
+        aria-label="Ausgewählte Bilder"
+        hidden
+      ></ul>
+    </section>
+
+    <section class="card" aria-labelledby="optionen-titel">
+      <h2 id="optionen-titel">E-Mail-Informationen</h2>
+
+      <div class="form-group">
+        <label for="recipient">Empfänger</label>
+
+        <input
+          id="recipient"
+          name="recipient"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          placeholder="name@beispiel.de"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Betreff</label>
+
+        <input
+          id="subject"
+          name="subject"
+          type="text"
+          value="Bilder als ZIP-Datei"
+          maxlength="200"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="message">Nachricht</label>
+
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          maxlength="2000"
+          placeholder="Nachricht für die E-Mail"
+        ></textarea>
+      </div>
+    </section>
+
+    <section class="actions" aria-label="Aktionen">
+      <button
+        id="createZipButton"
+        class="button button-primary"
+        type="button"
+        disabled
+      >
+        <span class="button-label">ZIP erstellen</span>
+      </button>
+
+      <button
+        id="shareButton"
+        class="button button-secondary"
+        type="button"
+        disabled
+      >
+        <span class="button-label">An Boxer teilen</span>
+      </button>
+
+      <button
+        id="downloadButton"
+        class="button button-secondary"
+        type="button"
+        disabled
+      >
+        <span class="button-label">ZIP speichern</span>
+      </button>
+    </section>
+
+    <section
+      id="statusBox"
+      class="status-box"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    >
+      <span id="statusText"></span>
+    </section>
+
+    <section class="privacy-note" aria-labelledby="datenschutz-titel">
+      <h2 id="datenschutz-titel">Datenschutz</h2>
+
+      <p>
+        Die Bilder werden ausschließlich im Browser verarbeitet. Die ZIP-Datei
+        wird erst dann an eine andere App übergeben, wenn Sie eine Aktion
+        auswählen.
+      </p>
+
+      <p>
+        Beim Teilen an Boxer verlässt die Datei das Gerät entsprechend der
+        Versandfunktion von Boxer.
+      </p>
+    </section>
+  </main>
+
+  <!-- JSZip erzeugt die ZIP-Datei direkt im Browser. -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+    defer
+  ></script>
+
+  <!-- Eigene Anwendungslogik -->
+  <script src="js/app.js" defer></script>
+</body>
+</html>
