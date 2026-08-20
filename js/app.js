@@ -148,71 +148,71 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function shareZip() {
-    if (!generatedZipFile) {
-      setStatus("Bitte erstellen Sie zuerst die ZIP-Datei.", "error");
-      return;
-    }
-
-    const shareData = {
-      files: [generatedZipFile],
-      title: subjectInput.value.trim() || "Bilder als ZIP-Datei",
-      text: createShareText()
-    };
-
-    if (!navigator.share || !navigator.canShare) {
-      setStatus(
-        "Das Teilen von Dateien wird in diesem Browser nicht unterstützt. " +
-        "Bitte speichern Sie die ZIP-Datei und teilen Sie sie über die Dateien-App.",
-        "warning"
-      );
-      return;
-    }
-
-    let canShareFiles = false;
-
-    try {
-      canShareFiles = navigator.canShare({
-        files: [generatedZipFile]
-      });
-    } catch (error) {
-      console.error("Fehler bei der Share-Prüfung:", error);
-    }
-
-    if (!canShareFiles) {
-      setStatus(
-        "Diese iOS-Version kann die ZIP-Datei nicht direkt teilen. " +
-        "Bitte speichern Sie die Datei und öffnen Sie sie anschließend über die Dateien-App.",
-        "warning"
-      );
-      return;
-    }
-
-    try {
-      setBusy(true);
-      setStatus("Teilen-Menü wird geöffnet …", "info");
-
-      await navigator.share(shareData);
-
-      setStatus(
-        "Die ZIP-Datei wurde an das iOS-Teilen-Menü übergeben.",
-        "success"
-      );
-    } catch (error) {
-      if (error.name === "AbortError") {
-        setStatus("Das Teilen wurde abgebrochen.", "info");
-        return;
-      }
-
-      console.error("Fehler beim Teilen der ZIP-Datei:", error);
-      setStatus(
-        "Die ZIP-Datei konnte nicht geteilt werden. " +
-        "Bitte verwenden Sie die Funktion „ZIP speichern“.",
-        "error"
-      );
-    } finally {
-      setBusy(false);
-    }
+  if (!generatedZipFile) {
+    setStatus("Bitte erstellen Sie zuerst die ZIP-Datei.", "error");
+    return;
   }
+
+  if (
+    typeof navigator.share !== "function" ||
+    typeof navigator.canShare !== "function"
+  ) {
+    setStatus(
+      "Das direkte Teilen von Dateien wird in diesem Browser nicht unterstützt. " +
+      "Bitte speichern Sie die ZIP-Datei und teilen Sie sie über die Dateien-App.",
+      "warning"
+    );
+    return;
+  }
+
+  const shareData = {
+    files: [generatedZipFile]
+  };
+
+  let canShareFiles = false;
+
+  try {
+    canShareFiles = navigator.canShare(shareData);
+  } catch (error) {
+    console.error("Fehler bei navigator.canShare():", error);
+  }
+
+  if (!canShareFiles) {
+    setStatus(
+      "Die ZIP-Datei kann aus diesem Browser nicht direkt geteilt werden. " +
+      "Bitte speichern Sie sie und teilen Sie sie über die Dateien-App.",
+      "warning"
+    );
+    return;
+  }
+
+  try {
+    setBusy(true);
+    setStatus("Teilen-Menü wird geöffnet …", "info");
+
+    await navigator.share(shareData);
+
+    setStatus(
+      "Die ZIP-Datei wurde an das iOS-Teilen-Menü übergeben.",
+      "success"
+    );
+  } catch (error) {
+    if (error.name === "AbortError") {
+      setStatus("Das Teilen wurde abgebrochen.", "info");
+      return;
+    }
+
+    console.error("Fehler beim Teilen:", error);
+
+    setStatus(
+      "Die ZIP-Datei konnte nicht direkt geteilt werden. " +
+      "Bitte speichern Sie sie und wählen Sie Boxer über die Dateien-App.",
+      "error"
+    );
+  } finally {
+    setBusy(false);
+  }
+}
 
   function downloadZip() {
     if (!generatedZipBlob || !generatedZipUrl) {
